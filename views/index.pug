@@ -1,0 +1,41 @@
+extends layout
+
+block content 
+  div(class="features")
+    div(class="create")
+      p
+        a(class="button" href="/books/new") Create New Book
+    div(class="search-box")
+      form(action="/search", method="get")
+        input(type="input" id="search" name="query")
+        input(type="submit" value="Search")
+  if books.length > 0
+    table
+      tr
+        th Title
+        th Author
+        th Genre
+        th Year
+      //get corresponding 10 books based on current page 
+      -console.log(`N: ${n}, maxIndex: ${maxIndex}, minIndex: ${minIndex}, book length: ${books.length}`);
+      while n < maxIndex && n < books.length
+        -console.log('N: ' + n);
+        tr
+          td
+            a(href=`/books/${books[n].id}`)= books[n].title
+          td= books[n].author
+          td= books[n].genre
+          td= books[n].year
+          -n++
+    h4 Pages
+    -var pagination = [...Array(numPages).keys()];
+    -console.dir(pagination);
+    if currentPage != 0
+      a(href=`${baseURL}page=${parseInt(currentPage) - 1}` class="pagination") Previous Page 
+    each page in pagination
+      a(href=`${baseURL}page=${page}` class="pagination")= page + 1 
+    if currentPage < (numPages -1)
+      a(href=`${baseURL}page=${parseInt(currentPage) + 1}` class="pagination") Next Page 
+  else
+    p= (query? `No books found matching your query: ${query}. Try your search again.`: 'No books found. Try again.')
+    a(href='/books') <- Home
