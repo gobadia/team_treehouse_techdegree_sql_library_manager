@@ -1,5 +1,8 @@
 extends layout
 
 block content
-  p= error.message
-  pre #{error.stack}
+  h2= `${err.status}`
+  p= err.message
+  a(class="button" href='/') Home
+  h3 Error Details:
+  pre #{err.stack}

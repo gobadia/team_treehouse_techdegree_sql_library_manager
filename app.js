@@ -35,28 +35,25 @@ app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  let err = new Error('Not Found');
-    err.status = 404;
-    res.render('page-not-found', {title: 'Page Not Found', err});
+  let err = new Error();
+  err.status = 404;
+  err.message= 'Book Not Found';
+    
+    res.status(404).render('page-not-found', {err});
   //next(createError(404, "Page not found. Try looking for another book from the Home Page"));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  if(!err.message){
-    err.message = 'Something went wrong. Maybe we can find a book to help us out.';
-  }
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.use(function(err, req, res, next) { 
   // render the error page
-  res.status(err.status || 500);
 
   if(err.status === 404){
-    res.render('page-not-found', {title:"Page Not Found"});
+    res.status(404).render('page-not-found', {err});
   }
   else{
-    res.render('error', {title:"Server Error"});
+    err.status = err.status || 500;
+    err.message = err.message || 'Something went wrong. Maybe we can find a book to help us out.';
+    res.status(err.status).render('error', {err});
   }
 });
 
